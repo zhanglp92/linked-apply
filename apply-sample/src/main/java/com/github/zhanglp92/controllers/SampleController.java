@@ -23,7 +23,6 @@ public class SampleController {
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String hello(@RequestParam String name) throws Throwable {
         applyExecute.execute(new Context(), new Compose());
-
         return "hello " + name;
     }
 }

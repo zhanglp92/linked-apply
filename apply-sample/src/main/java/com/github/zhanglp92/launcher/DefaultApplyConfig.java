@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 /**
- * 应用执行器
+ * 框架配置
  */
 @Component
 @Log4j2
