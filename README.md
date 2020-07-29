@@ -1,7 +1,7 @@
 ## linked-apply
 ---
 
-插拔式框架, 基于Spring实现
+插拔式框架, 基于SpringBoot实现
 
 ## 使用方式
 
