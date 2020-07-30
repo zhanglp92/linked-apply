@@ -6,12 +6,18 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 @Log4j2
 @Aspect
 @Component
-public class HandlerRuntimeAspect {
+public class HandlerRuntimeAspect implements Ordered {
+
+    @Override
+    public int getOrder() {
+        return AOPOrdered.PROCEED.ordinal();
+    }
 
     @Pointcut("execution(public void handler(com.github.zhanglp92.context.Context, com.github.zhanglp92.compose.Compose) throws Throwable) && @annotation(handlerRuntime)")
     public void pointcut(HandlerRuntime handlerRuntime) {
@@ -27,6 +33,7 @@ public class HandlerRuntimeAspect {
 
     private Object syncProceed(ProceedingJoinPoint proceedingJoinPoint, HandlerRuntime handlerRuntime) throws Throwable {
         // TODO: 使用独立线程运行
+
         log.warn("TODO, use alone thread runtime");
         return proceedingJoinPoint.proceed();
     }

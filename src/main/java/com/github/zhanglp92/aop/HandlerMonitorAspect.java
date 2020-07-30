@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @Aspect
 @Component
-public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable {
+public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable, Ordered {
 
     /**
      * 监控上下问内容
@@ -35,6 +36,14 @@ public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable {
 
     public HandlerMonitorAspect() {
         this.monitorContextThreadLocal = new ThreadLocal<>();
+    }
+
+    /**
+     * 当有多个AOP时, order执行先后顺序, 值越小最先执行, 最后结束
+     */
+    @Override
+    public int getOrder() {
+        return AOPOrdered.MONITOR.ordinal();
     }
 
     @Override

@@ -13,9 +13,13 @@ import org.springframework.stereotype.Component;
 public class SampleHandler extends RuleHandler {
 
     @Override
-    @HandlerMonitor
     @HandlerRuntime(enabled = true)
+    @HandlerMonitor
     public void handler(Context context, Compose compose) throws Throwable {
-        log.info("sample controller");
+        log.info("-------------- 实际执行了几次 SampleHandler");
+
+        log.info("sample controller...");
+        Thread.sleep(2 * 1000);
+        log.info("sample controller done");
     }
 }
