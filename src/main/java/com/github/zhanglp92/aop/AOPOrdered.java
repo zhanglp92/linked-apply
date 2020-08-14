@@ -1,7 +1,7 @@
 package com.github.zhanglp92.aop;
 
 /**
- * 自定义AOP执行顺序
+ * 多个切面同时存在时, 优先级定义(值越小, 优先执行)
  */
 public enum AOPOrdered {
     /**

@@ -58,9 +58,6 @@ public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable, O
      * * 异常: doAround before --> doBefore --> doAfter --> doAfterThrowing
      */
 
-//    @Pointcut("execution(* *(..)) && @annotation(com.github.zhanglp92.aop.annotations.HandlerMonitor)")
-//    public void pointcut() {
-//    }
     @Pointcut("execution(public void handler(com.github.zhanglp92.context.Context, com.github.zhanglp92.compose.Compose) throws Throwable) && @annotation(handlerMonitor)")
     public void pointcut(HandlerMonitor handlerMonitor) {
     }
@@ -70,6 +67,18 @@ public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable, O
      */
     @Around(value = "pointcut(handlerMonitor)")
     public Object around(ProceedingJoinPoint proceedingJoinPoint, HandlerMonitor handlerMonitor) throws Throwable {
+        if (handlerMonitor.enabled()) {
+            this.initMonitor(proceedingJoinPoint);
+        }
+
+        // handler方法执行
+        return proceedingJoinPoint.proceed();
+    }
+
+    /**
+     * 初始化监控
+     */
+    private void initMonitor(ProceedingJoinPoint proceedingJoinPoint) {
         // 初始化监控变量
         monitorContextThreadLocal.remove();
         monitorContextThreadLocal.set(new HandlerMonitorContext()
@@ -78,9 +87,6 @@ public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable, O
                 .setHandlerCompose((Compose) proceedingJoinPoint.getArgs()[1])
                 .setSignature(proceedingJoinPoint.getSignature().getDeclaringTypeName())
         );
-
-        // handler方法执行
-        return proceedingJoinPoint.proceed();
     }
 
     @Before(value = "pointcut(handlerMonitor)")
@@ -89,17 +95,29 @@ public class HandlerMonitorAspect implements HandlerMonitorAspectConfigurable, O
 
     @After(value = "pointcut(handlerMonitor)")
     public void after(JoinPoint joinPoint, HandlerMonitor handlerMonitor) {
+        if (!handlerMonitor.enabled()) {
+            return;
+        }
+
         HandlerMonitorContext handlerMonitorContext = monitorContextThreadLocal.get();
         handlerMonitorContext.setEndTime(System.currentTimeMillis());
     }
 
     @AfterReturning(value = "pointcut(handlerMonitor)")
     public void afterReturning(JoinPoint joinPoint, HandlerMonitor handlerMonitor) {
+        if (!handlerMonitor.enabled()) {
+            return;
+        }
+
         this.applyHandlerMonitor.monitor(this.monitorContextThreadLocal.get());
     }
 
     @AfterThrowing(value = "pointcut(handlerMonitor)")
     public void afterThrowing(JoinPoint joinPoint, HandlerMonitor handlerMonitor) {
+        if (!handlerMonitor.enabled()) {
+            return;
+        }
+
         this.applyHandlerMonitor.monitorException(this.monitorContextThreadLocal.get());
     }
 }

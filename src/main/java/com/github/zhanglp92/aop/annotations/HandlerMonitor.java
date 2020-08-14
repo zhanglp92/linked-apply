@@ -11,4 +11,9 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface HandlerMonitor {
+
+    /**
+     * 监控是否启动
+     */
+    boolean enabled() default true;
 }

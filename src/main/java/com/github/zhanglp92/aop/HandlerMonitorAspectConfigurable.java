@@ -8,5 +8,10 @@ import lombok.NonNull;
  */
 public interface HandlerMonitorAspectConfigurable {
 
+    /**
+     * 设置监控实例
+     *
+     * @param applyHandlerMonitor 监控实例接口
+     */
     void setApplyHandlerMonitor(@NonNull ApplyHandlerMonitor applyHandlerMonitor);
 }
